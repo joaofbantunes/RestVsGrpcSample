@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option csharp_namespace = "CodingMilitia.RestVsGrpcSample.GrpcLib.Generated";
+
+package proto;
+
+service HelloService {
+    rpc GetHello(HelloRequest) returns (HelloResponse) {}
+}
+
+message HelloRequest {}
+
+message HelloResponse {
+    string hello = 1;
+}

@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.10.8" />
+    <PackageReference Include="CodingMilitia.RestVsGrpcSample.GrpcLib" Version="1.0.0" />
+  </ItemGroup>
+</Project>
