@@ -9,17 +9,20 @@ namespace CodingMilitia.RestVsGrpcSample.GrpcLib
     {
         private Channel _channel;
         private HelloServiceClient _client;
-        
-        public void Connect(){
+
+        public void Connect()
+        {
             _channel = new Channel("localhost:1234", ChannelCredentials.Insecure);
             _client = new HelloServiceClient(_channel);
         }
 
-        public async Task<string> SendMessageAsync(){
-            return (await _client.GetHelloAsync(new HelloRequest())).Hello;
+        public async Task<HelloResponse> SendMessageAsync()
+        {
+            return await _client.GetHelloAsync(new HelloRequest());
         }
 
-        public async Task ShutdownAsync(){
+        public async Task ShutdownAsync()
+        {
             await _channel.ShutdownAsync();
         }
     }

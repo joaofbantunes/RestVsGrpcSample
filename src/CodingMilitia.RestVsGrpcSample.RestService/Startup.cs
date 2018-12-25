@@ -25,6 +25,11 @@ namespace CodingMilitia.RestVsGrpcSample.RestService
                 app.UseDeveloperExceptionPage();
             }
 
+            app.Map("/json", builder => builder.Run(async (context) =>
+            {
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsync("{\"hello\": \"Hello World!\"}");
+            }));
             app.Run(async (context) => { await context.Response.WriteAsync("Hello World!"); });
         }
     }

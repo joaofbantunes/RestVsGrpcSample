@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using CodingMilitia.RestVsGrpcSample.GrpcLib;
+using Newtonsoft.Json;
 
 namespace CodingMilitia.RestVsGrpcSample.Benchmark
 {
@@ -30,13 +31,28 @@ namespace CodingMilitia.RestVsGrpcSample.Benchmark
         }
 
         [Benchmark]
-        public async Task RestAsync()
+        public async Task RestStringAsync()
         {
             for (var i = 0; i < Iterations; ++i)
             {
                 var result = await _httpClient.GetStringAsync("http://localhost:5000");
 
                 if (result != ExpectedResponse)
+                {
+                    throw new Exception("Response is not what's expected!");
+                }
+            }
+        }
+        
+        [Benchmark]
+        public async Task RestJsonAsync()
+        {
+            for (var i = 0; i < Iterations; ++i)
+            {
+                var result = await _httpClient.GetStringAsync("http://localhost:5000/json");
+                var parsedResult = JsonConvert.DeserializeObject<JsonHelloResponse>(result);
+                
+                if (parsedResult.Hello != ExpectedResponse)
                 {
                     throw new Exception("Response is not what's expected!");
                 }
@@ -50,7 +66,7 @@ namespace CodingMilitia.RestVsGrpcSample.Benchmark
             {
                 var result = await _grpcClient.SendMessageAsync();
 
-                if (result != ExpectedResponse)
+                if (result.Hello != ExpectedResponse)
                 {
                     throw new Exception("Response is not what's expected!");
                 }
