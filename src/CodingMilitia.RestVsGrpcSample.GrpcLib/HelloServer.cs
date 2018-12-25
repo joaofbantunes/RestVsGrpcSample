@@ -8,7 +8,7 @@ namespace CodingMilitia.RestVsGrpcSample.GrpcLib
     public class HelloServiceImplementation : HelloServiceBase {
         public override Task<Generated.HelloResponse> GetHello(Generated.HelloRequest request, Grpc.Core.ServerCallContext context)
         {
-            return Task.FromResult(new Generated.HelloResponse{ Hello = "Hello world!" });
+            return Task.FromResult(new Generated.HelloResponse{ Hello = "Hello World!" });
         }
     }
 

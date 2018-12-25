@@ -1,9 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="CodingMilitia.RestVsGrpcSample.GrpcLib" Version="1.0.0" />
+    <ProjectReference Include="..\CodingMilitia.RestVsGrpcSample.GrpcLib\CodingMilitia.RestVsGrpcSample.GrpcLib.csproj" />
   </ItemGroup>
 </Project>
