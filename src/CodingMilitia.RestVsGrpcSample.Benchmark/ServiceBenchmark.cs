@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 
 namespace CodingMilitia.RestVsGrpcSample.Benchmark
 {
+    [RankColumn, MemoryDiagnoser]
     public class ServiceBenchmark
     {
         private const int Iterations = 1000;
