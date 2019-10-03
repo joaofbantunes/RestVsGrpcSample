@@ -1,35 +1,32 @@
-﻿using System;
-using System.Threading.Tasks;
-using CodingMilitia.RestVsGrpcSample.GrpcLib;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.Extensions.Hosting;
 
 namespace CodingMilitia.RestVsGrpcSample.GrpcService
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            MainAsync(args).GetAwaiter().GetResult();
+            CreateHostBuilder(args).Build().Run();
         }
 
-        static async Task MainAsync(string[] args)
-        {
-            var isServer = args[0].Equals("server");
-
-            if(isServer)
-            {
-                var server = new HelloServer();
-                server.Listen();
-                Console.WriteLine("Listening...");
-                Console.ReadKey();
-                await server.ShutdownAsync();
-            }
-            else
-            {
-                var client = new HelloClient();
-                client.Connect();
-                Console.WriteLine(await client.SendMessageAsync());
-                await client.ShutdownAsync();
-            }
-        }
+        // Additional configuration is required to successfully run gRPC on macOS.
+        // For instructions on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    // Can't use HTTPS on MacOS, so some shenanigans are needed
+                    webBuilder.ConfigureKestrel(options =>
+                    {
+                        // Setup a HTTP/2 endpoint without TLS.
+                        options.ListenLocalhost(
+                            5002,
+                            o => o.Protocols = HttpProtocols.Http2);
+                    });
+                    
+                    webBuilder.UseStartup<Startup>();
+                });
     }
 }

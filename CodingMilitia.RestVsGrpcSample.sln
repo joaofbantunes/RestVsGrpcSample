@@ -7,8 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CF0B2267-AB5
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodingMilitia.RestVsGrpcSample.Benchmark", "src\CodingMilitia.RestVsGrpcSample.Benchmark\CodingMilitia.RestVsGrpcSample.Benchmark.csproj", "{FDD22B0B-0867-4863-8FD0-24B780EBA0F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodingMilitia.RestVsGrpcSample.GrpcLib", "src\CodingMilitia.RestVsGrpcSample.GrpcLib\CodingMilitia.RestVsGrpcSample.GrpcLib.csproj", "{D26F3948-2217-477A-9D11-4A10B73BD14E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodingMilitia.RestVsGrpcSample.GrpcService", "src\CodingMilitia.RestVsGrpcSample.GrpcService\CodingMilitia.RestVsGrpcSample.GrpcService.csproj", "{6F979F86-502D-4C9B-B677-9F9240879113}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodingMilitia.RestVsGrpcSample.RestService", "src\CodingMilitia.RestVsGrpcSample.RestService\CodingMilitia.RestVsGrpcSample.RestService.csproj", "{394C02A0-1126-4FED-AA6B-462E255EA1A5}"
@@ -38,18 +36,6 @@ Global
 		{FDD22B0B-0867-4863-8FD0-24B780EBA0F0}.Release|x64.Build.0 = Release|Any CPU
 		{FDD22B0B-0867-4863-8FD0-24B780EBA0F0}.Release|x86.ActiveCfg = Release|Any CPU
 		{FDD22B0B-0867-4863-8FD0-24B780EBA0F0}.Release|x86.Build.0 = Release|Any CPU
-		{D26F3948-2217-477A-9D11-4A10B73BD14E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D26F3948-2217-477A-9D11-4A10B73BD14E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D26F3948-2217-477A-9D11-4A10B73BD14E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{D26F3948-2217-477A-9D11-4A10B73BD14E}.Debug|x64.Build.0 = Debug|Any CPU
-		{D26F3948-2217-477A-9D11-4A10B73BD14E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{D26F3948-2217-477A-9D11-4A10B73BD14E}.Debug|x86.Build.0 = Debug|Any CPU
-		{D26F3948-2217-477A-9D11-4A10B73BD14E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D26F3948-2217-477A-9D11-4A10B73BD14E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D26F3948-2217-477A-9D11-4A10B73BD14E}.Release|x64.ActiveCfg = Release|Any CPU
-		{D26F3948-2217-477A-9D11-4A10B73BD14E}.Release|x64.Build.0 = Release|Any CPU
-		{D26F3948-2217-477A-9D11-4A10B73BD14E}.Release|x86.ActiveCfg = Release|Any CPU
-		{D26F3948-2217-477A-9D11-4A10B73BD14E}.Release|x86.Build.0 = Release|Any CPU
 		{6F979F86-502D-4C9B-B677-9F9240879113}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6F979F86-502D-4C9B-B677-9F9240879113}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F979F86-502D-4C9B-B677-9F9240879113}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -77,7 +63,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{FDD22B0B-0867-4863-8FD0-24B780EBA0F0} = {CF0B2267-AB53-467B-A85A-2997888F0767}
-		{D26F3948-2217-477A-9D11-4A10B73BD14E} = {CF0B2267-AB53-467B-A85A-2997888F0767}
 		{6F979F86-502D-4C9B-B677-9F9240879113} = {CF0B2267-AB53-467B-A85A-2997888F0767}
 		{394C02A0-1126-4FED-AA6B-462E255EA1A5} = {CF0B2267-AB53-467B-A85A-2997888F0767}
 	EndGlobalSection
