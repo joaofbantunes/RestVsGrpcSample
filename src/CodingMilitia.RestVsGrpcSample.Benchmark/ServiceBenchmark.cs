@@ -45,7 +45,7 @@ namespace CodingMilitia.RestVsGrpcSample.Benchmark
         {
             for (var i = 0; i < Iterations; ++i)
             {
-                StringContent stringContent = new StringContent(JsonSerializer.Serialize<object>(new JsonHelloRequest{ Name = "World" }));
+                var stringContent = new StringContent(JsonSerializer.Serialize<object>(new JsonHelloRequest{ Name = "World" }));
                 stringContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 var result = await _httpClient.PostAsync("http://localhost:5000/hello", stringContent);
                 
