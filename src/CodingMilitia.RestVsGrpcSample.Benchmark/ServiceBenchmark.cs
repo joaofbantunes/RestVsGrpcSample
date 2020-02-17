@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -13,10 +14,11 @@ namespace CodingMilitia.RestVsGrpcSample.Benchmark
     public class ServiceBenchmark
     {
         private const int Iterations = 100;
+        private const int ComplexCollectionsSize = 50;
         private const string ExpectedResponse = "Hello World!";
 
         private static readonly JsonSerializerOptions JsonSerializerOptions =
-            new JsonSerializerOptions{PropertyNameCaseInsensitive = true};
+            new JsonSerializerOptions {PropertyNameCaseInsensitive = true};
 
         private HttpClient _httpClient;
         private GrpcChannel _grpcChannel;
@@ -26,11 +28,11 @@ namespace CodingMilitia.RestVsGrpcSample.Benchmark
         public void Setup()
         {
             _httpClient = new HttpClient();
-            
+
             // Can't use HTTPS on MacOS, so some shenanigans are needed 
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
             _grpcChannel = GrpcChannel.ForAddress("http://localhost:5002");
-            _grpcClient =  new HelloService.HelloServiceClient(_grpcChannel);
+            _grpcClient = new HelloService.HelloServiceClient(_grpcChannel);
         }
 
         [GlobalCleanup]
@@ -39,20 +41,21 @@ namespace CodingMilitia.RestVsGrpcSample.Benchmark
             _httpClient.Dispose();
             _grpcChannel.Dispose();
         }
-       
+
         [Benchmark(Baseline = true)]
-        public async Task RestAsync()
+        public async Task Rest()
         {
             for (var i = 0; i < Iterations; ++i)
             {
-                var stringContent = new StringContent(JsonSerializer.Serialize<object>(new JsonHelloRequest{ Name = "World" }));
+                var stringContent =
+                    new StringContent(JsonSerializer.Serialize<object>(new JsonHelloRequest {Name = "World"}));
                 stringContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 var result = await _httpClient.PostAsync("http://localhost:5000/hello", stringContent);
-                
+
                 var parsedResult = await JsonSerializer.DeserializeAsync<JsonHelloResponse>(
-                    await result.Content.ReadAsStreamAsync(), 
+                    await result.Content.ReadAsStreamAsync(),
                     JsonSerializerOptions);
-                
+
                 if (parsedResult.Hello != ExpectedResponse)
                 {
                     throw new Exception("Response is not what's expected!");
@@ -61,13 +64,61 @@ namespace CodingMilitia.RestVsGrpcSample.Benchmark
         }
 
         [Benchmark]
-        public async Task GrpcAsync()
+        public async Task Grpc()
         {
             for (var i = 0; i < Iterations; ++i)
             {
-                var result = await _grpcClient.GetHelloAsync(new HelloRequest{ Name = "World"});
+                var result = await _grpcClient.GetHelloAsync(new HelloRequest {Name = "World"});
 
                 if (result.Hello != ExpectedResponse)
+                {
+                    throw new Exception("Response is not what's expected!");
+                }
+            }
+        }
+
+        [Benchmark]
+        public async Task ComplexRest()
+        {
+            for (var i = 0; i < Iterations; ++i)
+            {
+                var request = new JsonComplexHelloRequest
+                {
+                    Name = "World",
+                    SimpleHellos = Enumerable.Range(0, ComplexCollectionsSize)
+                        .Select(i => new JsonHelloRequest {Name = "World " + i}),
+                    SomeRandomNumbers = Enumerable.Range(0, ComplexCollectionsSize)
+                };
+
+                var stringContent = new StringContent(JsonSerializer.Serialize<object>(request));
+                stringContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                var result = await _httpClient.PostAsync("http://localhost:5000/hello/complex", stringContent);
+
+                 var parsed = await JsonSerializer.DeserializeAsync<JsonComplexHelloResponse>(
+                     await result.Content.ReadAsStreamAsync(),
+                     JsonSerializerOptions);
+
+                 if (parsed.Hello != ExpectedResponse || !parsed.SimpleHellos.Any() || !parsed.SomeRandomNumbers.Any())
+                {
+                    throw new Exception("Response is not what's expected!");
+                }
+            }
+        }
+
+        [Benchmark]
+        public async Task ComplexGrpc()
+        {
+            for (var i = 0; i < Iterations; ++i)
+            {
+                var request = new ComplexHelloRequest {Name = "World"};
+                request.SimpleHellos.AddRange(
+                    Enumerable.Range(0, ComplexCollectionsSize)
+                        .Select(i => new HelloRequest {Name = "World " + i}));
+                request.SomeRandomNumbers.AddRange(Enumerable.Range(0, ComplexCollectionsSize));
+
+                var result = await _grpcClient.GetMoreComplexHelloAsync(request);
+
+                if (result.Hello != ExpectedResponse || !result.SimpleHellos.Any() || !result.SomeRandomNumbers.Any())
                 {
                     throw new Exception("Response is not what's expected!");
                 }
