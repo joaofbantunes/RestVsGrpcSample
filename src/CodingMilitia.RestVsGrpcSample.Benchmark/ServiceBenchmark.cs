@@ -48,12 +48,18 @@ namespace CodingMilitia.RestVsGrpcSample.Benchmark
             for (var i = 0; i < Iterations; ++i)
             {
                 var stringContent =
-                    new StringContent(JsonSerializer.Serialize<object>(new JsonHelloRequest {Name = "World"}));
+                    new StringContent(JsonSerializer.Serialize(new JsonHelloRequest {Name = "World"}));
                 stringContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                var result = await _httpClient.PostAsync("http://localhost:5000/hello", stringContent);
+
+                var requestMessage = new HttpRequestMessage(HttpMethod.Post, "http://localhost:5000/hello")
+                {
+                    Content = stringContent
+                };
+                
+                using var responseMessage = await _httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);
 
                 var parsedResult = await JsonSerializer.DeserializeAsync<JsonHelloResponse>(
-                    await result.Content.ReadAsStreamAsync(),
+                    await responseMessage.Content.ReadAsStreamAsync(),
                     JsonSerializerOptions);
 
                 if (parsedResult.Hello != ExpectedResponse)
@@ -92,13 +98,19 @@ namespace CodingMilitia.RestVsGrpcSample.Benchmark
 
                 var stringContent = new StringContent(JsonSerializer.Serialize<object>(request));
                 stringContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                var result = await _httpClient.PostAsync("http://localhost:5000/hello/complex", stringContent);
+                
+                var requestMessage = new HttpRequestMessage(HttpMethod.Post, "http://localhost:5000/hello/complex")
+                {
+                    Content = stringContent
+                };
+                
+                using var responseMessage = await _httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);
 
-                 var parsed = await JsonSerializer.DeserializeAsync<JsonComplexHelloResponse>(
-                     await result.Content.ReadAsStreamAsync(),
-                     JsonSerializerOptions);
+                var parsed = await JsonSerializer.DeserializeAsync<JsonComplexHelloResponse>(
+                    await responseMessage.Content.ReadAsStreamAsync(),
+                    JsonSerializerOptions);
 
-                 if (parsed.Hello != ExpectedResponse || !parsed.SimpleHellos.Any() || !parsed.SomeRandomNumbers.Any())
+                if (parsed.Hello != ExpectedResponse || !parsed.SimpleHellos.Any() || !parsed.SomeRandomNumbers.Any())
                 {
                     throw new Exception("Response is not what's expected!");
                 }
