@@ -28,10 +28,7 @@ namespace CodingMilitia.RestVsGrpcSample.Benchmark
         public void Setup()
         {
             _httpClient = new HttpClient();
-
-            // Can't use HTTPS on MacOS, so some shenanigans are needed 
-            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
-            _grpcChannel = GrpcChannel.ForAddress("http://localhost:5002");
+            _grpcChannel = GrpcChannel.ForAddress("https://localhost:5003");
             _grpcClient = new HelloService.HelloServiceClient(_grpcChannel);
         }
 
@@ -51,7 +48,7 @@ namespace CodingMilitia.RestVsGrpcSample.Benchmark
                     new StringContent(JsonSerializer.Serialize(new JsonHelloRequest {Name = "World"}));
                 stringContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-                var requestMessage = new HttpRequestMessage(HttpMethod.Post, "http://localhost:5000/hello")
+                var requestMessage = new HttpRequestMessage(HttpMethod.Post, "https://localhost:5001/hello")
                 {
                     Content = stringContent
                 };
@@ -99,7 +96,7 @@ namespace CodingMilitia.RestVsGrpcSample.Benchmark
                 var stringContent = new StringContent(JsonSerializer.Serialize<object>(request));
                 stringContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 
-                var requestMessage = new HttpRequestMessage(HttpMethod.Post, "http://localhost:5000/hello/complex")
+                var requestMessage = new HttpRequestMessage(HttpMethod.Post, "https://localhost:5001/hello/complex")
                 {
                     Content = stringContent
                 };
